@@ -1,25 +1,52 @@
 package advisor;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpServer;
+
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SpotifyAPI {
 
-    private static final String CLIENT_ID = "8dd8d22735d148588bd892a1dc55b97e";
-    private static final String CLIENT_SECRET = "2f28c373a8d546a48347cd359bccd3e0";
+    private static String CLIENT_ID;
+    private static String CLIENT_SECRET;
+    private static String AUTH_URI;
     private static final String REDIRECT_URI = "http://localhost:8080";
     private static String access_server = "https://accounts.spotify.com";
-    private static final String AUTH_URI = String.format("https://accounts.spotify.com/authorize?" +
-            "client_id=%s&redirect_uri=%s", CLIENT_ID, REDIRECT_URI);;
     private boolean isAuthorise = false;
+
+    static {
+        try {
+
+            Gson gson = new Gson();
+            Reader reader = Files.newBufferedReader(Paths.get("credentials.json").toAbsolutePath());
+
+            Map<String, String> map = gson.fromJson(reader, Map.class);
+
+            CLIENT_ID = map.get("CLIENT_ID");
+            CLIENT_SECRET = map.get("CLIENT_SECRET");
+            AUTH_URI = String.format("https://accounts.spotify.com/authorize?" +
+                    "client_id=%s&redirect_uri=%s", CLIENT_ID, REDIRECT_URI);
+
+            reader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void setAccessServer(String access_server) {
         SpotifyAPI.access_server = access_server;

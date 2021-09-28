@@ -1062,5 +1062,32 @@ files:
     }
   learner_created: true
 feedback_link: https://hyperskill.org/projects/62/stages/338/implement#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: "Wrong answer in test #1\n\nNot found a link with redirect_uri after 9\
+    \ seconds.\n\nPlease find below the output of your program during this failed\
+    \ test.\nNote that the &#39;&gt;&#39; character indicates the beginning of the\
+    \ input line.\n\n---\n\nArguments: -access http://127.0.0.1:45678 -resource http://127.0.0.1:56789\n\
+    \nstdout:\n&gt; auth\nuse this link to request the access code:\nnull\n\nwaiting\
+    \ for code...\n\nstderr:\njava.nio.file.NoSuchFileException: C:\\Users\\IvanPC\\\
+    Desktop\\JAVA\\Music Advisor\\Music Advisor\\task\\credentials.json\n\tat java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)\n\
+    \tat java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)\n\
+    \tat java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)\n\
+    \tat java.base/sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:235)\n\
+    \tat java.base/java.nio.file.Files.newByteChannel(Files.java:370)\n\tat java.base/java.nio.file.Files.newByteChannel(Files.java:421)\n\
+    \tat java.base/java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:420)\n\
+    \tat java.base/java.nio.file.Files.newInputStream(Files.java:155)\n\tat java.base/java.nio.file.Files.newBufferedReader(Files.java:2838)\n\
+    \tat java.base/java.nio.file.Files.newBufferedReader(Files.java:2870)\n\tat advisor.SpotifyAPI.&lt;clinit&gt;(SpotifyAPI.java:35)\n\
+    \tat advisor.Main.parseAccessArg(Main.java:15)\n\tat advisor.Main.main(Main.java:8)\n\
+    \tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\
+    \tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\
+    \tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\
+    \tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.hyperskill.hstest.testing.execution.MainMethodExecutor.invokeMain(MainMethodExecutor.java:173)\n\
+    \tat org.hyperskill.hstest.testing.execution.MainMethodExecutor.lambda$launch$0(MainMethodExecutor.java:200)\n\
+    \tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)\n\
+    \tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat\
+    \ java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\
+    \tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\
+    \tat java.base/java.lang.Thread.run(Thread.java:834)"
+  time: Tue, 28 Sep 2021 18:41:54 UTC
 record: -1
