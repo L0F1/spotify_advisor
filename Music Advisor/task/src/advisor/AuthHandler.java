@@ -6,15 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class AuthHandler implements HttpHandler {
+
     private String authGrantCode = "";
-    private boolean error = false;
-    private String errorMessage;
+    private String errorMessage = "";
 
     public String getAuthGrantCode() {
         return authGrantCode;
     }
-
-    public boolean isError() { return error; }
 
     public String getErrorMessage() { return errorMessage; }
 
@@ -26,12 +24,14 @@ public class AuthHandler implements HttpHandler {
 
         if (query != null) {
             // достаем authGrant из параметров URI
-            var URIArgs = SpotifyAPI.parseURIArgs(query);
+            var uriArgs = SpotifyAPI.parseURIArgs(query);
 
-            if (URIArgs.containsKey("code")) {
-                authGrantCode = URIArgs.get("code");
+            if (uriArgs.containsKey("code")) {
+                authGrantCode = uriArgs.get("code");
                 responseText = "Got the code. Return back to your program.";
             }
+            /*if (uriArgs.containsKey("error"))
+                errorMessage = uriArgs.get("error");*/
         }
 
         exchange.sendResponseHeaders(200, responseText.getBytes().length);

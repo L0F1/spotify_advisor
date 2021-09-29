@@ -1,8 +1,8 @@
-<h2 style="text-align: center;">Description</h2>
+<h5 style="text-align: center;">Description</h5>
 
 <p>As you can see from the previous stage, we need to find a way to get a response code from the URL in the user's browser. By default, Java doesn't have browser capabilities but has opportunities to create your own simple HTTP server.</p>
 
-<h3>What is HTTP</h3>
+<h5>What is HTTP</h5>
 
 <p>HTTP means <a target="_blank" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" rel="nofollow noopener noreferrer">Hypertext Transfer Protocol</a>, which is a stateless data transfer protocol based on client-server technology, where messaging occurs according to the request-response scheme. The main manipulation object is the resource indexed by the URI. Every time you need to make an HTTP request, follow this structure:</p>
 
@@ -30,7 +30,7 @@ A response line:</p>
 
 <pre><code class="language-no-highlight">HTTP/1.1 200 OK</code></pre>
 
-<h3>Creating a server in java</h3>
+<h5>Creating a server in java</h5>
 
 <p><code class="language-java">com.sun.net.httpserver</code> package included in Java SE contains classes. The main class is <code class="language-java">HttpServer</code>. This class implements a simple HTTP server. To create an instance of this class, you need to use static factory method "create" and bind it to IP and port.</p>
 
@@ -61,7 +61,7 @@ server.bind(new InetSocketAddress(8080), 0);</code></pre>
 <pre><code class="language-java">String query = exchange.getRequestURI().getQuery();
 </code></pre>
 
-<h3>Making HTTP requests in Java</h3>
+<h5>Making HTTP requests in Java</h5>
 
 <p>JDK 11 provides a few classes in the <code class="language-java">java.net.http</code> package to make HTTP requests: read more about them <a target="_blank" href="http://openjdk.java.net/groups/net/httpclient/" rel="nofollow noopener noreferrer">at openjdk.java.net</a>. First, you should create an <code class="language-java">HttpClient</code> instance:</p>
 
@@ -99,7 +99,7 @@ System.out.println(response.body());
 
 <p>Useful hint: you can use <a target="_blank" href="https://reqbin.com/" rel="noopener noreferrer nofollow">reqbin</a> to test POST and GET requests to API without Java.</p>
 
-<h3>Objectives</h3>
+<h5>Objectives</h5>
 
 <p>Using the <a target="_blank" href="https://developer.spotify.com/documentation/general/guides/authorization-guide/" rel="nofollow noopener noreferrer">Spotify authorization guide</a> and the information given here (you need the section <em>Authorization Code Flow</em>), improve your program by adding real authorization on Spotify.</p>
 
@@ -119,7 +119,7 @@ System.out.println(response.body());
 
 <p>Also, in this stage, you should read the Spotify access server point from the command line argument. Server path should be passed to the program using <code class="language-java">-access</code> argument. If this argument is not set, you should use a default argument, <code class="language-java">https://accounts.spotify.com</code>. Make sure you replace constants to this argument value everywhere!</p>
 
-<h2 style="text-align: center;">Example</h2>
+<h5 style="text-align: center;">Example</h5>
 
 <p>Below is an output example of the described program. Try to output all cases like in the example.</p>
 

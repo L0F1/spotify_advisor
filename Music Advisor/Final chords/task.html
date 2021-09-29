@@ -1,8 +1,8 @@
-<h2 style="text-align: center;">Description</h2>
+<h5 style="text-align: center;">Description</h5>
 
 <p>Since the results can take up many lines, sometimes it is not convenient to see the whole result at once, and you might want to see everything separately. In this stage, you will need to reorganize your application and add paginated output.</p>
 
-<h3>MVC pattern</h3>
+<h5>MVC pattern</h5>
 
 <p>MVC (Model View Controller) is an architectural pattern for building an application. Using this pattern we achieve separation of data and presentation, scalability, and maintainability. The main concept of MVC is the division of the program into three parts. Model (or just data) is manipulated by the user performing various actions. Controller receives these actions from the user and interprets them, changes the model, and updates the view. The view determines how the elements on the screen will be displayed, what text they will have, indents, etc.</p>
 
@@ -16,13 +16,13 @@
 
 <p style="text-align: center;"><strong><img alt="" height="390" src="https://ucarecdn.com/cc70612a-aa89-4812-b4bd-3380c4b33b41/" width="333"></strong></p>
 
-<h3>Objectives</h3>
+<h5>Objectives</h5>
 
 <p>According to the MVC pattern, reorganize your application into three components (the controller should read input and make requests to the API and update the view) and create a paginated output that will display 5 entries per page. You should be able to navigate through the pages using the commands <code class="java">next</code> (see the next page) and <code class="java">prev</code> (see the previous page). If the user is viewing the last page or the first one and calls next or prev, then you need to display a message: "No more pages." and stay at the same page. Also, under each output should be a message containing the number of the current page and how many total pages there are.</p>
 
 <p>Don't forget about <code class="java">-access</code> and <code class="java">-resource</code> arguments and add another argument: a number of entries that should be shown on a page. Your program should process argument <code class="java">-page</code>. If ths argument isn't set, you should use the default value 5.</p>
 
-<h2 style="text-align: center;">Example</h2>
+<h5 style="text-align: center;">Example</h5>
 
 <p>Below is an output example of the described program. Try to output all cases like in the example.</p>
 

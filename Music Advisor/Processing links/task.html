@@ -1,6 +1,6 @@
-<h2 style="text-align: center;">Description</h2>
+<h5 style="text-align: center;">Description</h5>
 
-<h3>GSON library</h3>
+<h5>GSON library</h5>
 
 <p>Since API basically responds in JSON format, we need to handle it somehow. Writing your own JSON parser will take a long time, so we will use the ready-made solution of the GSON library made by Google. The <code class="language-java">build.gradle</code> file already has this dependency connected, see this line:</p>
 
@@ -38,7 +38,7 @@ for (JsonElement hobby : jo.getAsJsonArray("hobbies")) {
 }
 </code></pre>
 
-<h3>REST principles</h3>
+<h5>REST principles</h5>
 
 <p>Since the Spotify API is based on simple REST principles, we must learn what REST means. Representational State Transfer (REST) is a software architectural style that defines a set of constraints to be used for creating web services.<br>
 It works over HTTP. The main concept of REST is resource: every URL defines its own resource and every HTTP method defines a verb you want to do with this resource.</p>
@@ -49,7 +49,7 @@ It works over HTTP. The main concept of REST is resource: every URL defines its 
 /albums/5 with the PUT method should update information about the fifth album;<br>
 /albums/5 with the DELETE method should delete album number 5.</p>
 
-<h3>Adding authorization header</h3>
+<h5>Adding authorization header</h5>
 
 <p>Every request to Spotify API must contain a header "Authorization" with the value "Bearer + access_token". Extra information may be passed in query parameters (if it is a GET method) or in the request body (if it is a POST method).</p>
 
@@ -62,7 +62,7 @@ It works over HTTP. The main concept of REST is resource: every URL defines its 
         .build();
 </code></pre>
 
-<h3>What should you do</h3>
+<h5>What should you do</h5>
 
 <p>In this stage, you should replace your fake responses with the real ones. You should make requests to Spotify API and parse responses with the json parser.</p>
 
@@ -96,7 +96,7 @@ To get featured playlists, use <code class="language-java">https://api.spotify.c
 
 <p>Make sure you replace constants to these argument values everywhere.</p>
 
-<h2 style="text-align: center;">Example</h2>
+<h5 style="text-align: center;">Example</h5>
 
 <p>Below is an output example of the described program. Try to output all cases like in the example.</p>
 
