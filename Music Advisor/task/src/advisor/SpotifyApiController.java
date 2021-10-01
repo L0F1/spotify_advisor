@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class SpotifyAPI {
+public class SpotifyApiController {
 
     private static String CLIENT_ID;
     private static String CLIENT_SECRET;
@@ -27,6 +27,8 @@ public class SpotifyAPI {
     private static HttpClient client;
     private boolean isAuthorise = false;
     private String accessToken;
+    private QueryResultModel model;
+    private QueryResultView view;
 
     static {
         try {
@@ -45,22 +47,19 @@ public class SpotifyAPI {
         }
     }
 
-    public static void setAccessServer(String access_server) {
-        SpotifyAPI.access_server = access_server;
-    }
+    public SpotifyApiController(String access_server, String api_server, int pages) {
 
-    public static void setApiServer(String api_server) {
-        SpotifyAPI.api_server = api_server;
-    }
+        if (access_server != null)
+            SpotifyApiController.access_server = access_server;
+        if (api_server != null)
+            SpotifyApiController.api_server = api_server;
 
-    public static Map<String, String> parseURIArgs(String query) {
-        Map<String, String> mapArgs = new HashMap<>();
-        String[] args = query.split("&");
-        for (var arg: args) {
-            String[] mapArg = arg.split("=");
-            mapArgs.put(mapArg[0], mapArg[1]);
-        }
-        return mapArgs;
+        int resPerPage = 5;
+        if (pages != 0)
+            resPerPage = pages;
+
+        model = new QueryResultModel(resPerPage);
+        view = new QueryResultView();
     }
 
     public void auth() {
