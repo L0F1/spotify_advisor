@@ -69,25 +69,32 @@ public class SpotifyApiController {
         if (isAuthorized)
         {
             if (command.equals("new")) {
-                updateModel(newAlbums());
-                //updateView();
+                newModel(newAlbums());
+                updateView(1);
             }
 
             else if(command.equals("featured")) {
-                updateModel(featured());
-                ///updateView();
+                newModel(featured());
+                updateView(1);
             }
 
             else if(command.equals("categories")) {
-                updateModel(categories());
-                //updateView();
+                newModel(categories());
+                updateView(1);
             }
 
             else if(command.startsWith("playlists")) {
-                updateModel(playlistsOfCategory(command.substring(10)));
-                //updateView();
+                newModel(playlistsOfCategory(command.substring(10)));
+                updateView(1);
             }
 
+            else if (command.equals("next")) {
+                updateView(model.getCurrentPage()+1);
+            }
+
+            else if (command.equals("prev")) {
+                updateView(model.getCurrentPage()-1);
+            }
 
             else if (command.equals("exit")) {
                 System.out.println("---GOODBYE!---");
@@ -108,15 +115,20 @@ public class SpotifyApiController {
         return statusCode;
     }
 
-    private void updateModel(ArrayList<String> result) {
+    private void newModel(ArrayList<String> result) {
         model = new QueryResultModel(pages);
         model.setQueryResult(result);
     }
 
     private void updateView(int page) {
         if (model.getQueryResult().size() > 0) {
-            view.updatePage(model.getQueryResult(),model.getResPerPage(),
-                    model.getCurrentPage(),model.getPages());
+            if (page < 1 || page > model.getPages())
+                System.out.println("No more pages.");
+            else {
+                model.setCurrentPage(page);
+                view.updatePage(model.getQueryResult(),model.getResPerPage(),
+                        model.getCurrentPage(),model.getPages());
+            }
         }
     }
 
@@ -184,7 +196,7 @@ public class SpotifyApiController {
                 for (var artist : album.getAsJsonObject().get("artists").getAsJsonArray()) {
                     artists.add(artist.getAsJsonObject().get("name").getAsString());
                 }
-                str.append(artists.toString() + "\n");
+                str.append(artists + "\n");
                 str.append(album.getAsJsonObject().get("external_urls")
                         .getAsJsonObject().get("spotify").getAsString() + "\n");
                 result.add(str.toString());
@@ -254,11 +266,10 @@ public class SpotifyApiController {
                     .getAsJsonObject("playlists");
 
             for (var playlist : playlists.getAsJsonArray("items")) {
-                StringBuilder str = new StringBuilder();
-                str.append(playlist.getAsJsonObject().get("name").getAsString() + "\n");
-                str.append(playlist.getAsJsonObject().get("external_urls")
-                        .getAsJsonObject().get("spotify").getAsString() + "\n");
-                result.add(str.toString());
+                String str = playlist.getAsJsonObject().get("name").getAsString() + "\n" +
+                        playlist.getAsJsonObject().get("external_urls")
+                                .getAsJsonObject().get("spotify").getAsString() + "\n";
+                result.add(str);
             }
 
         } catch (SpotifyAccessDeniedException e) {
