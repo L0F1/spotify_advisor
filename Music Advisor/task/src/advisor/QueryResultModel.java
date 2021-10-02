@@ -1,10 +1,11 @@
 package advisor;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QueryResultModel {
 
-    private String[] queryResult;
+    private ArrayList<String> queryResult;
     private final int resPerPage;
     private int currentPage;
     private int pages;
@@ -13,14 +14,18 @@ public class QueryResultModel {
         this.resPerPage = resPerPage;
     }
 
-    public String[] getQueryResult() {
-        return Arrays.copyOf(queryResult, queryResult.length);
+    public List<String> getQueryResult() {
+        return List.copyOf(queryResult);
     }
 
-    public void setQueryResult(String[] queryResult) {
+    public void setQueryResult(ArrayList<String> queryResult) {
         this.queryResult = queryResult;
-        pages = queryResult.length / resPerPage;
+        pages = queryResult.size() / resPerPage;
         currentPage = 1;
+    }
+
+    public int getResPerPage() {
+        return resPerPage;
     }
 
     public int getPages() {

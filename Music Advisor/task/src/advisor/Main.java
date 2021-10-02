@@ -13,7 +13,16 @@ public class Main {
                 new SpotifyApiController(mapArgs.get("access"), mapArgs.get("resource"),
                 Integer.parseInt(mapArgs.get("page") == null ? "0" : mapArgs.get("page")));
 
-        Menu(controller);
+        Scanner scanner = new Scanner(System.in);
+        int statusCode;
+        String line;
+
+        do {
+            line = scanner.nextLine();
+
+            statusCode = controller.executeCommand(line);
+
+        } while (statusCode == 0);
     }
 
     private static Map<String, String> parseAccessArg(String[] args) {
@@ -25,34 +34,5 @@ public class Main {
             }
         }
         return map;
-    }
-
-    private static void Menu(SpotifyApiController controller) {
-
-        Scanner scanner = new Scanner(System.in);
-        String line;
-
-        do {
-            line = scanner.nextLine();
-
-            if (line.equals("new"))
-                controller.newAlbums();
-
-            else if(line.equals("featured"))
-                controller.featured();
-
-            else if(line.equals("categories"))
-                controller.categories();
-
-            else if(line.startsWith("playlists"))
-                controller.playlistsOfCategory(line.substring(10));
-
-            else if (line.equals("auth"))
-                controller.auth();
-
-            else if (line.equals("exit"))
-                System.out.println("---GOODBYE!---");
-
-        } while (!line.equals("exit"));
     }
 }

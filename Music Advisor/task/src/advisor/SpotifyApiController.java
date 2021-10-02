@@ -12,9 +12,9 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class SpotifyApiController {
 
@@ -24,11 +24,13 @@ public class SpotifyApiController {
     private static final String REDIRECT_URI = "http://localhost:8080";
     private static String access_server = "https://accounts.spotify.com";
     private static String api_server = "https://api.spotify.com";
-    private static HttpClient client;
-    private boolean isAuthorise = false;
+    private static final HttpClient client = HttpClient.newHttpClient();
     private String accessToken;
     private QueryResultModel model;
-    private QueryResultView view;
+    private final QueryResultView view;
+    private boolean isAuthorized;
+    private int pages;
+
 
     static {
         try {
@@ -40,7 +42,6 @@ public class SpotifyApiController {
             CLIENT_SECRET = credentials.get("CLIENT_SECRET").getAsString();
             AUTH_URI = String.format("https://accounts.spotify.com/authorize?response_type=code&" +
                     "client_id=%s&redirect_uri=%s", CLIENT_ID, REDIRECT_URI);
-            client = HttpClient.newHttpClient();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,20 +55,72 @@ public class SpotifyApiController {
         if (api_server != null)
             SpotifyApiController.api_server = api_server;
 
-        int resPerPage = 5;
+        this.pages = 5;
         if (pages != 0)
-            resPerPage = pages;
+            this.pages = pages;
 
-        model = new QueryResultModel(resPerPage);
         view = new QueryResultView();
+        isAuthorized = false;
     }
 
-    public void auth() {
+    public int executeCommand(String command) {
+        int statusCode = 0;
 
-        if (isAuthorise){
-            System.out.println("You are already authorized.");
-            return;
+        if (isAuthorized)
+        {
+            if (command.equals("new")) {
+                updateModel(newAlbums());
+                //updateView();
+            }
+
+            else if(command.equals("featured")) {
+                updateModel(featured());
+                ///updateView();
+            }
+
+            else if(command.equals("categories")) {
+                updateModel(categories());
+                //updateView();
+            }
+
+            else if(command.startsWith("playlists")) {
+                updateModel(playlistsOfCategory(command.substring(10)));
+                //updateView();
+            }
+
+
+            else if (command.equals("exit")) {
+                System.out.println("---GOODBYE!---");
+                statusCode++;
+            }
         }
+        else {
+            if (command.equals("auth"))
+                auth();
+
+            else if (command.equals("exit")) {
+                System.out.println("---GOODBYE!---");
+                statusCode++;
+            }
+            else System.out.println("Please, provide access for application.");
+
+        }
+        return statusCode;
+    }
+
+    private void updateModel(ArrayList<String> result) {
+        model = new QueryResultModel(pages);
+        model.setQueryResult(result);
+    }
+
+    private void updateView(int page) {
+        if (model.getQueryResult().size() > 0) {
+            view.updatePage(model.getQueryResult(),model.getResPerPage(),
+                    model.getCurrentPage(),model.getPages());
+        }
+    }
+
+    private void auth() {
 
         System.out.println("use this link to request the access code:");
         System.out.println(AUTH_URI);
@@ -87,15 +140,12 @@ public class SpotifyApiController {
         }
 
         System.out.println("\n---SUCCESS---\n");
-        isAuthorise = true;
+        isAuthorized = true;
     }
 
-    public void featured() {
+    private ArrayList<String> featured() {
 
-        if (!isAuthorise){
-            System.out.println("Please, provide access for application.");
-            return;
-        }
+        ArrayList<String> result = new ArrayList<>();
 
         try {
 
@@ -104,22 +154,21 @@ public class SpotifyApiController {
                     .getAsJsonObject("playlists");
 
             for (JsonElement playlist : playlists.getAsJsonArray("items")) {
-                System.out.println(playlist.getAsJsonObject().get("name").getAsString());
-                System.out.println(playlist.getAsJsonObject().get("external_urls")
-                        .getAsJsonObject().get("spotify").getAsString() + "\n");
+                String str = playlist.getAsJsonObject().get("name").getAsString() + "\n" +
+                        playlist.getAsJsonObject().get("external_urls")
+                                .getAsJsonObject().get("spotify").getAsString() + "\n";
+                result.add(str);
             }
 
         } catch (SpotifyAccessDeniedException e) {
             System.out.println(e.getMessage());
         }
+        return result;
     }
 
-    public void newAlbums() {
+    private ArrayList<String> newAlbums() {
 
-        if (!isAuthorise){
-            System.out.println("Please, provide access for application.");
-            return;
-        }
+        ArrayList<String> result = new ArrayList<>();
 
         try {
 
@@ -128,28 +177,28 @@ public class SpotifyApiController {
                     .getAsJsonObject("albums");
 
             for (var album : albums.getAsJsonArray("items")) {
-                System.out.println(album.getAsJsonObject().get("name").getAsString());
+                StringBuilder str = new StringBuilder();
+                str.append(album.getAsJsonObject().get("name").getAsString() + "\n");
 
                 LinkedList<String> artists = new LinkedList<>();
                 for (var artist : album.getAsJsonObject().get("artists").getAsJsonArray()) {
                     artists.add(artist.getAsJsonObject().get("name").getAsString());
                 }
-                System.out.println(artists.toString());
-                System.out.println(album.getAsJsonObject().get("external_urls")
+                str.append(artists.toString() + "\n");
+                str.append(album.getAsJsonObject().get("external_urls")
                         .getAsJsonObject().get("spotify").getAsString() + "\n");
+                result.add(str.toString());
             }
 
         } catch (SpotifyAccessDeniedException e) {
             System.out.println(e.getMessage());
         }
+        return result;
     }
 
-    public void categories() {
+    private ArrayList<String> categories() {
 
-        if (!isAuthorise){
-            System.out.println("Please, provide access for application.");
-            return;
-        }
+        ArrayList<String> result = new ArrayList<>();
 
         try {
 
@@ -157,23 +206,19 @@ public class SpotifyApiController {
             JsonObject categories = JsonParser.parseString(response).getAsJsonObject()
                     .getAsJsonObject("categories");
 
-            System.out.println();
             for (var category : categories.getAsJsonArray("items")) {
-                System.out.println(category.getAsJsonObject().get("name").getAsString());
+                result.add(category.getAsJsonObject().get("name").getAsString());
             }
-            System.out.println();
 
         } catch (SpotifyAccessDeniedException e) {
             System.out.println(e.getMessage());
         }
+        return result;
     }
 
-    public void playlistsOfCategory(String ctg) {
+    private ArrayList<String> playlistsOfCategory(String ctg) {
 
-        if (!isAuthorise){
-            System.out.println("Please, provide access for application.");
-            return;
-        }
+        ArrayList<String> result = new ArrayList<>();
 
         try {
 
@@ -191,7 +236,7 @@ public class SpotifyApiController {
             // return if this category dont have id
             if (!catToId.containsKey(ctg)) {
                 System.out.println("Unknown category name.");
-                return;
+                return result;
             }
 
             response = sendGetRequest("/v1/browse/categories/"
@@ -202,21 +247,24 @@ public class SpotifyApiController {
                 String errMessage = JsonParser.parseString(response).getAsJsonObject()
                         .get("error").getAsJsonObject().get("message").getAsString();
                 System.out.println(errMessage);
-                return;
+                return result;
             }
 
             JsonObject playlists = JsonParser.parseString(response).getAsJsonObject()
                     .getAsJsonObject("playlists");
 
             for (var playlist : playlists.getAsJsonArray("items")) {
-                System.out.println(playlist.getAsJsonObject().get("name").getAsString());
-                System.out.println(playlist.getAsJsonObject().get("external_urls")
+                StringBuilder str = new StringBuilder();
+                str.append(playlist.getAsJsonObject().get("name").getAsString() + "\n");
+                str.append(playlist.getAsJsonObject().get("external_urls")
                         .getAsJsonObject().get("spotify").getAsString() + "\n");
+                result.add(str.toString());
             }
 
         } catch (SpotifyAccessDeniedException e) {
             System.out.println(e.getMessage());
         }
+        return result;
     }
 
     private String getAuthGrantCode() {
